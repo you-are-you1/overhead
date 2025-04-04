@@ -117,22 +117,24 @@ public class PlayerMovementWithDash : MonoBehaviour
         jumpAction.Enable();
         abilityAction = controls.Player.Ability;
         abilityAction.Enable();
+        
     }
 
     private void OnDisable()
     {
+    
+        controls.Player.Disable();
+        controls.Disable();
         moveAction.Disable();
         jumpAction.Disable();
         abilityAction.Disable();
+        
     }
     private void Start()
     {
         SetGravityScale(Data.gravityScale);
         IsFacingRight = true;
         
-        moveAction = InputSystem.actions.FindAction("Move");
-        jumpAction = InputSystem.actions.FindAction("Jump");
-        abilityAction = InputSystem.actions.FindAction("Ability");
 
         enableWallJumpAbility = true;
         enableDashAbility = false;

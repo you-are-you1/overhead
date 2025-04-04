@@ -131,11 +131,14 @@ public class Ascend : MonoBehaviour
     {
         abilityAction = controls.Player.Ability;
         abilityAction.Enable();
+        SpikesScript.OnPlayerTouchSpikesEvent += stopAscendSpikes;
     }
 
     private void OnDisable()
     {
+        controls.Disable();
         abilityAction.Disable();
+        SpikesScript.OnPlayerTouchSpikesEvent -= stopAscendSpikes;
     }
 
     private void Sleep(float duration)
@@ -157,6 +160,19 @@ public class Ascend : MonoBehaviour
     public void SetGravityScale(float scale)
     {
         RB.gravityScale = scale;
+    }
+
+    private void stopAscendSpikes(SpikesScript script)
+    {
+        stopAscend();
+    }
+
+    private void stopAscend()
+    {
+        if (isAscending)
+        {
+            StopCoroutine(nameof(StartAscend));
+        }
     }
     
 }
