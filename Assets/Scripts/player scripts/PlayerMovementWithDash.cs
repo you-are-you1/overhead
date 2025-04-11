@@ -181,7 +181,7 @@ public class PlayerMovementWithDash : MonoBehaviour
             if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer)) //checks if set box overlaps with ground
             {
               
-                Ascend.isAscendBoosting = false;
+                if (RB.linearVelocity.y <= 0) Ascend.isAscendBoosting = false;
 
                 LastOnGroundTime = Data.coyoteTime; //if so sets the lastGrounded to coyoteTime
             }
@@ -237,15 +237,17 @@ public class PlayerMovementWithDash : MonoBehaviour
         if (!IsDashing)
         {
             //Jump
-            if (CanJump() && LastPressedJumpTime > 0)
+            if (CanJump() && LastPressedJumpTime > 0 && !Ascend.isAscendBoosting)
             {
                 IsJumping = true;
                 IsWallJumping = false;
                 _isJumpCut = false;
                 _isJumpFalling = false;
                 Jump();
-
                 
+
+
+
             }
             //WALL JUMP
             else if (CanWallJump() && LastPressedJumpTime > 0 && enableWallJumpAbility == true)
@@ -291,8 +293,8 @@ public class PlayerMovementWithDash : MonoBehaviour
 
         
         #region SLIDE CHECKS
-        if (CanSlide() && ((LastOnWallLeftTime > 0 && _moveInput.x < 0) || 
-            (LastOnWallRightTime > 0 && _moveInput.x > 0)))
+        if (CanSlide() && (((LastOnWallLeftTime > 0 && _moveInput.x < 0) || 
+            (LastOnWallRightTime > 0 && _moveInput.x > 0)) || RB.linearVelocity.y > 0))
             IsSliding = true;
         else
             IsSliding = false;
@@ -646,7 +648,7 @@ public class PlayerMovementWithDash : MonoBehaviour
     public bool CanSlide()
     {
         //LastOnWallTime > 0
-        if (IsTouchingWall && !IsJumping && !IsWallJumping && !IsDashing && LastOnGroundTime <= 0)
+        if (IsTouchingWall && !IsJumping && !IsWallJumping && !IsDashing && LastOnGroundTime <= 0 && !Ascend.isAscending)
             return true;
         else
             return false;

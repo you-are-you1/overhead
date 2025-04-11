@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,8 +6,8 @@ using UnityEngine.InputSystem;
 public class Ascend : MonoBehaviour
 {
     public PlayerDataWithDash Data;
-    
-    
+
+    public static event Action<Ascend> NextLevelEvent;
 
     public InputSystem_Actions controls;
     InputAction abilityAction;
@@ -17,11 +18,14 @@ public class Ascend : MonoBehaviour
     private bool checkForAscend;
     private RaycastHit2D centerCheck;
 
-    public Bounds bounds;
+    [HideInInspector] public Bounds bounds;
     private Collider2D overlap;
 
     public bool isAscending {  get; private set; }
-    public bool isAscendBoosting;
+    [HideInInspector] public bool isAscendBoosting;
+
+    [SerializeField] private GameObject levelTrigger;
+    private bool isInLevelTrigger;
 
     int groundLayerMask;
 
@@ -44,9 +48,14 @@ public class Ascend : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (abilityAction.WasPressedThisFrame())
         {
-            checkForAscend = true;
+            if (!isInLevelTrigger) checkForAscend = true;
+            else
+            {
+                NextLevelEvent?.Invoke(this);
+            }
         }
 
         if (checkForAscend)
@@ -89,12 +98,14 @@ public class Ascend : MonoBehaviour
         
         SetGravityScale(0);
 
+        gameObject.layer = 8;
+
         while (!isAscendingInWall())
         {
             RB.linearVelocity = Vector2.up * Data.ascendSpeedOutsideWall;
             yield return null;
         }
-        gameObject.layer = 8;
+        
         Sleep(Data.ascendSleepBetweenTime);   
 
         while (isAscendingInWall())
@@ -111,7 +122,7 @@ public class Ascend : MonoBehaviour
         isAscendBoosting = true;
     }
 
-    private bool isAscendingInWall()
+    public bool isAscendingInWall()
     {
         bounds = playerCollider.bounds;
 
@@ -174,5 +185,21 @@ public class Ascend : MonoBehaviour
             StopCoroutine(nameof(StartAscend));
         }
     }
-    
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject == levelTrigger)
+        {
+            isInLevelTrigger = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject == levelTrigger)
+        {
+            isInLevelTrigger = false;
+        }
+    }
+
 }
