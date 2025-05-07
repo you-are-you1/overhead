@@ -15,8 +15,8 @@ public class Ascend : MonoBehaviour
     private Rigidbody2D RB;
     private Collider2D playerCollider;
 
-    private bool checkForAscend;
-    private RaycastHit2D centerCheck;
+    public bool checkForAscend {  get; private set; }
+    public RaycastHit2D centerCheck {  get; private set; }
 
     [HideInInspector] public Bounds bounds;
     private Collider2D overlap;
@@ -64,12 +64,12 @@ public class Ascend : MonoBehaviour
                 Vector2.up, Data.ascendRange, groundLayerMask);
             
 
-            if (centerCheck)
-            {
-                Debug.DrawLine(new Vector2(transform.position.x, transform.position.y + 0.5f), centerCheck.point);
-            }
-            else Debug.DrawLine(new Vector2(transform.position.x, transform.position.y + 0.5f),
-                new Vector2(transform.position.x, transform.position.y + 0.5f + Data.ascendRange));
+            //if (centerCheck)
+            //{
+            //    Debug.DrawLine(new Vector2(transform.position.x, transform.position.y + 0.5f), centerCheck.point);
+            //}
+            //else Debug.DrawLine(new Vector2(transform.position.x, transform.position.y + 0.5f),
+            //    new Vector2(transform.position.x, transform.position.y + 0.5f + Data.ascendRange));
 
             
         }
