@@ -6009,25 +6009,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1071618964765500797, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
-      propertyPath: orthographic size
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 1071618964765500797, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
-      propertyPath: m_NormalizedViewPortRect.y
-      value: 0.21381058
-      objectReference: {fileID: 0}
-    - target: {fileID: 1071618964765500797, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
-      propertyPath: m_NormalizedViewPortRect.height
-      value: 0.5701615
-      objectReference: {fileID: 0}
     - target: {fileID: 1596831103198027867, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
     - target: {fileID: 4864579011336196805, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.94444275
+      value: -0.94444466
       objectReference: {fileID: 0}
     - target: {fileID: 4864579011336196805, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6078,26 +6066,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 994635006109872436, guid: 2fd47643e971b104f93573cb2a12f6da, type: 3}
-      propertyPath: m_ReferencePixelsPerUnit
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 1462699035905783971, guid: 2fd47643e971b104f93573cb2a12f6da, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1701484975}
-    - target: {fileID: 1462699035905783971, guid: 2fd47643e971b104f93573cb2a12f6da, type: 3}
-      propertyPath: m_RenderMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1462699035905783971, guid: 2fd47643e971b104f93573cb2a12f6da, type: 3}
-      propertyPath: m_PixelPerfect
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3533533520383119355, guid: 2fd47643e971b104f93573cb2a12f6da, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7605146694483697132, guid: 2fd47643e971b104f93573cb2a12f6da, type: 3}
       propertyPath: m_LocalPosition.x
       value: -28.04
