@@ -63,6 +63,7 @@ MonoBehaviour:
   ascendSleepTime: 0.1
   ascendSleepBetweenTime: 0.05
   ascendEndBoost: 30
+  ascendCooldownTime: 0.5
   superdashChargeTime: 0.5
   superdashSpeed: 30
   superdashFreezeTime: 0.3

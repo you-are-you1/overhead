@@ -704,7 +704,7 @@ MonoBehaviour:
   _wallCheckSize: {x: 0.5, y: 0.9}
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 68
 --- !u!114 &8882451451728282316
 MonoBehaviour:
   m_ObjectHideFlags: 0

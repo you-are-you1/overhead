@@ -15,6 +15,8 @@ public class Ascend : MonoBehaviour
     private Rigidbody2D RB;
     private Collider2D playerCollider;
 
+    private float ascendCooldown;
+
     public bool checkForAscend {  get; private set; }
     public RaycastHit2D centerCheck {  get; private set; }
 
@@ -42,19 +44,24 @@ public class Ascend : MonoBehaviour
         bounds = new Bounds();
         overlap = new Collider2D();
 
+        ascendCooldown = 0;
         //enableItem();
     }
 
     // Update is called once per frame
     void Update()
     {
+        ascendCooldown -= Time.deltaTime;
 
-        if (abilityAction.WasPressedThisFrame())
+        if (abilityAction.WasPressedThisFrame() && !isAscending)
         {
-            if (!isInLevelTrigger) checkForAscend = true;
-            else
+            if (isInLevelTrigger)
             {
                 NextLevelEvent?.Invoke(this);
+            }
+            else if (ascendCooldown < 0)
+            {
+                checkForAscend = true;
             }
         }
 
@@ -74,7 +81,7 @@ public class Ascend : MonoBehaviour
             
         }
 
-        if (abilityAction.WasReleasedThisFrame() && !isAscending)
+        if (abilityAction.WasReleasedThisFrame() && !isAscending && checkForAscend)
         {
             checkForAscend = false;
 
@@ -143,6 +150,7 @@ public class Ascend : MonoBehaviour
         abilityAction = controls.Player.Ability;
         abilityAction.Enable();
         SpikesScript.OnPlayerTouchSpikesEvent += stopAscendSpikes;
+        AscendBlockerScript.OnPlayerTouchAscendBlocker += stopAscendBlocker;
     }
 
     private void OnDisable()
@@ -150,6 +158,7 @@ public class Ascend : MonoBehaviour
         controls.Disable();
         abilityAction.Disable();
         SpikesScript.OnPlayerTouchSpikesEvent -= stopAscendSpikes;
+        AscendBlockerScript.OnPlayerTouchAscendBlocker -= stopAscendBlocker;
     }
 
     private void Sleep(float duration)
@@ -178,11 +187,21 @@ public class Ascend : MonoBehaviour
         stopAscend();
     }
 
+    private void stopAscendBlocker(AscendBlockerScript blocker)
+    {
+        stopAscend();
+    }
+
     private void stopAscend()
     {
         if (isAscending)
         {
             StopCoroutine(nameof(StartAscend));
+            gameObject.layer = 0;
+            SetGravityScale(Data.gravityScale);
+            isAscending = false;
+            ascendCooldown = Data.ascendCooldownTime;
+            Debug.Log("stoped");
         }
     }
 

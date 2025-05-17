@@ -98,6 +98,7 @@ public class PlayerDataWithDash : ScriptableObject
     public float ascendSleepTime;
     public float ascendSleepBetweenTime;
     public float ascendEndBoost;
+    public float ascendCooldownTime;
 
     [Space(20)]
 
