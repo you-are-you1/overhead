@@ -57,7 +57,7 @@ MonoBehaviour:
   grappleEndSpeed: 30
   grappleLerpStrength: 0.5
   grappleError: 0.5
-  ascendRange: 12
+  ascendRange: 8
   ascendSpeedOutsideWall: 35
   ascendSpeedInWall: 25
   ascendSleepTime: 0.1
