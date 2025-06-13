@@ -35,7 +35,7 @@ public class AnimationScript : MonoBehaviour
         rb.simulated = false;
 
         playerAnimator.SetTrigger("Death"); //player death anim
-        LevelLoader.isDeath = true;
+        //LevelLoader.isDeath = true;
         Debug.Log(LevelLoader.isDeath);
     }
 

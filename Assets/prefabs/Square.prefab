@@ -528,6 +528,7 @@ GameObject:
   - component: {fileID: 8697099889011724093}
   - component: {fileID: 8470220460404901452}
   - component: {fileID: 6499102706346221898}
+  - component: {fileID: 6335965037444647632}
   m_Layer: 0
   m_Name: Square
   m_TagString: Player
@@ -680,7 +681,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -705,6 +706,9 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 68
+  _wallJumpLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &8882451451728282316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -881,3 +885,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: db774531f6e811343a3d42ea09c7c3a2, type: 2}
+--- !u!114 &6335965037444647632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8024194590903409930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29308d5989923be47bf9604410bf0669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathPlane: {fileID: 0}

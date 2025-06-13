@@ -151,6 +151,8 @@ public class Ascend : MonoBehaviour
         abilityAction.Enable();
         SpikesScript.OnPlayerTouchSpikesEvent += stopAscendSpikes;
         AscendBlockerScript.OnPlayerTouchAscendBlocker += stopAscendBlocker;
+        DeathPlaneScript.OnPlayerTouchDeathPlaneEvent += disableControls;
+
     }
 
     private void OnDisable()
@@ -159,6 +161,7 @@ public class Ascend : MonoBehaviour
         abilityAction.Disable();
         SpikesScript.OnPlayerTouchSpikesEvent -= stopAscendSpikes;
         AscendBlockerScript.OnPlayerTouchAscendBlocker -= stopAscendBlocker;
+        DeathPlaneScript.OnPlayerTouchDeathPlaneEvent -= disableControls;
     }
 
     private void Sleep(float duration)
@@ -190,6 +193,11 @@ public class Ascend : MonoBehaviour
     private void stopAscendBlocker(AscendBlockerScript blocker)
     {
         stopAscend();
+    }
+
+    private void disableControls(DeathPlaneScript script)
+    {
+        controls.Disable();
     }
 
     private void stopAscend()

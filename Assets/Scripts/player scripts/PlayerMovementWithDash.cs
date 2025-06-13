@@ -89,6 +89,7 @@ public class PlayerMovementWithDash : MonoBehaviour
     #region LAYERS & TAGS
     [Header("Layers & Tags")]
     [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private LayerMask _wallJumpLayer;
     #endregion
 
     public InputSystem_Actions controls;
@@ -117,7 +118,8 @@ public class PlayerMovementWithDash : MonoBehaviour
         jumpAction.Enable();
         abilityAction = controls.Player.Ability;
         abilityAction.Enable();
-        
+
+        DeathPlaneScript.OnPlayerTouchDeathPlaneEvent += disableControls;
     }
 
     private void OnDisable()
@@ -129,6 +131,7 @@ public class PlayerMovementWithDash : MonoBehaviour
         jumpAction.Disable();
         abilityAction.Disable();
         
+        DeathPlaneScript.OnPlayerTouchDeathPlaneEvent -= disableControls;
     }
     private void Start()
     {
@@ -188,8 +191,8 @@ public class PlayerMovementWithDash : MonoBehaviour
 
             IsTouchingWall = false;
             //Right Wall Check
-            if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _groundLayer) && IsFacingRight)
-                    || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _groundLayer) && !IsFacingRight)) && !IsWallJumping)
+            if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallJumpLayer) && IsFacingRight)
+                    || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallJumpLayer) && !IsFacingRight)) && !IsWallJumping)
             {
                 LastOnWallRightTime = Data.coyoteTime;
                 
@@ -199,8 +202,8 @@ public class PlayerMovementWithDash : MonoBehaviour
                 
 
             //Left Wall Check
-            if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _groundLayer) && !IsFacingRight)
-                || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _groundLayer) && IsFacingRight)) && !IsWallJumping)
+            if (((Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _wallJumpLayer) && !IsFacingRight)
+                || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallJumpLayer) && IsFacingRight)) && !IsWallJumping)
             {
                 LastOnWallLeftTime = Data.coyoteTime;
                 
@@ -237,7 +240,7 @@ public class PlayerMovementWithDash : MonoBehaviour
         if (!IsDashing)
         {
             //Jump
-            if (CanJump() && LastPressedJumpTime > 0 && !Ascend.isAscendBoosting)
+            if (CanJump() && LastPressedJumpTime > 0 && !Ascend.isAscendBoosting && !Ascend.isAscending)
             {
                 IsJumping = true;
                 IsWallJumping = false;
@@ -497,6 +500,9 @@ public class PlayerMovementWithDash : MonoBehaviour
         if (RB.linearVelocity.y < 0)
             force -= RB.linearVelocity.y;
 
+        Debug.Log(Ascend.isAscending);
+        Debug.Log(Ascend.isAscendBoosting);
+
         RB.AddForce(Vector2.up * force, ForceMode2D.Impulse);
         
         #endregion
@@ -655,7 +661,10 @@ public class PlayerMovementWithDash : MonoBehaviour
     }
     #endregion
 
-    
+    private void disableControls(DeathPlaneScript script)
+    {
+        controls.Disable();
+    }
 
 
     #region EDITOR METHODS

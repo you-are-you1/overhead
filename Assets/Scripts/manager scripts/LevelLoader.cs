@@ -20,12 +20,14 @@ public class LevelLoader : MonoBehaviour
     {
         SpikesScript.OnPlayerTouchSpikesEvent += reloadLevelSpikes;
         Ascend.NextLevelEvent += loadNextLevel;
+        DeathPlaneScript.OnPlayerTouchDeathPlaneEvent += reloadLevelDeathPlane;
     }
 
     private void OnDisable()
     {
         SpikesScript.OnPlayerTouchSpikesEvent -= reloadLevelSpikes;
         Ascend.NextLevelEvent -= loadNextLevel;
+        DeathPlaneScript.OnPlayerTouchDeathPlaneEvent -= reloadLevelDeathPlane;
     }
 
     private void Awake()
@@ -85,4 +87,5 @@ public class LevelLoader : MonoBehaviour
     }
 
     private void reloadLevelSpikes(SpikesScript script) { reloadLevel(); }
+    private void reloadLevelDeathPlane(DeathPlaneScript script) { reloadLevel(); }
 }

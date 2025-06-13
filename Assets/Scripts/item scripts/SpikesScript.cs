@@ -37,6 +37,7 @@ public class SpikesScript : MonoBehaviour
         if (collision.gameObject == player && !playerAscend.isAscendingInWall())
         {
             Debug.Log("playuer touched spikes");
+            LevelLoader.isDeath = true;
             OnPlayerTouchSpikesEvent?.Invoke(this); //send spikes event out
 
         }
