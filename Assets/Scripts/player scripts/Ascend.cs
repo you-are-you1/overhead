@@ -26,6 +26,8 @@ public class Ascend : MonoBehaviour
     public bool isAscending {  get; private set; }
     [HideInInspector] public bool isAscendBoosting;
 
+    public float jumpAfterAscendTimer { get; private set; }
+
     [SerializeField] private GameObject levelTrigger;
     private bool isInLevelTrigger;
 
@@ -45,13 +47,18 @@ public class Ascend : MonoBehaviour
         overlap = new Collider2D();
 
         ascendCooldown = 0;
+        jumpAfterAscendTimer = 0;
         //enableItem();
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         ascendCooldown -= Time.deltaTime;
+        jumpAfterAscendTimer -= Time.deltaTime;
+        
 
         if (abilityAction.WasPressedThisFrame() && !isAscending)
         {
@@ -65,6 +72,7 @@ public class Ascend : MonoBehaviour
             }
         }
 
+        
         if (checkForAscend)
         {
             centerCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + 0.5f),
@@ -127,6 +135,7 @@ public class Ascend : MonoBehaviour
 
         isAscending = false;
         isAscendBoosting = true;
+        jumpAfterAscendTimer = Data.jumpPreventionAfterAscendTime;
     }
 
     public bool isAscendingInWall()
@@ -134,6 +143,7 @@ public class Ascend : MonoBehaviour
         bounds = playerCollider.bounds;
 
         overlap = Physics2D.OverlapBox(new Vector3(bounds.center.x, bounds.center.y + 0.1f, 0f), bounds.size - new Vector3(0.1f, 0.1f, 0f), 0, groundLayerMask);
+        
 
         return overlap != null;
     }
@@ -208,8 +218,8 @@ public class Ascend : MonoBehaviour
             gameObject.layer = 0;
             SetGravityScale(Data.gravityScale);
             isAscending = false;
-            ascendCooldown = Data.ascendCooldownTime;
-            Debug.Log("stoped");
+            ascendCooldown = Data.ascendBlockerCooldownTime;
+            
         }
     }
 

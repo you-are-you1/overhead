@@ -195,8 +195,10 @@ public class PlayerMovementWithDash : MonoBehaviour
                     || (Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _wallJumpLayer) && !IsFacingRight)) && !IsWallJumping)
             {
                 LastOnWallRightTime = Data.coyoteTime;
+
+                if (!Ascend.isAscending) Ascend.isAscendBoosting = false;
                 
-                Ascend.isAscendBoosting = false;
+                
                 IsTouchingWall = true;
             }
                 
@@ -207,7 +209,8 @@ public class PlayerMovementWithDash : MonoBehaviour
             {
                 LastOnWallLeftTime = Data.coyoteTime;
                 
-                Ascend.isAscendBoosting = false;
+                if (!Ascend.isAscending) Ascend.isAscendBoosting = false;
+
                 IsTouchingWall = true;
             }
                 
@@ -216,7 +219,7 @@ public class PlayerMovementWithDash : MonoBehaviour
             LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
         }
         #endregion
-
+        
         #region JUMP CHECKS
         if (IsJumping && RB.linearVelocity.y < 0)
         {
@@ -240,7 +243,7 @@ public class PlayerMovementWithDash : MonoBehaviour
         if (!IsDashing)
         {
             //Jump
-            if (CanJump() && LastPressedJumpTime > 0 && !Ascend.isAscendBoosting && !Ascend.isAscending)
+            if (CanJump() && LastPressedJumpTime > 0 && !Ascend.isAscendBoosting && !Ascend.isAscending && Ascend.jumpAfterAscendTimer < 0)
             {
                 IsJumping = true;
                 IsWallJumping = false;
@@ -500,8 +503,7 @@ public class PlayerMovementWithDash : MonoBehaviour
         if (RB.linearVelocity.y < 0)
             force -= RB.linearVelocity.y;
 
-        Debug.Log(Ascend.isAscending);
-        Debug.Log(Ascend.isAscendBoosting);
+        
 
         RB.AddForce(Vector2.up * force, ForceMode2D.Impulse);
         
