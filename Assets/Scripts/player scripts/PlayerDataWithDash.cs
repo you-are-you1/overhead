@@ -81,16 +81,7 @@ public class PlayerDataWithDash : ScriptableObject
 
     [Space(20)]
 
-    [Header("Grapple")]
-    public float grappleSpeed;
-    public float grappleSleepTime;
-    public float grappleEndTime;
-    public float grappleEndSpeed;
-    public float grappleLerpStrength;
-    public float grappleError;
-
-    [Space(20)]
-
+    
     [Header("Ascend")]
     public float ascendRange;
     public float ascendSpeedOutsideWall;
@@ -103,25 +94,18 @@ public class PlayerDataWithDash : ScriptableObject
 
     [Space(20)]
 
-    [Header("Superdash")]
-    public float superdashChargeTime;
-    public float superdashSpeed;
-    public float superdashFreezeTime;
-    public float superdashMinTime;
-    public float superdashCancelBoost;
+    [Header("Camera control")]
+    public float timeToLook;
+    //public float distanceToLook;
+    public float cameraMoveDuration;
 
     [Space(20)]
+    [Header("Springs")]
+    public float SideSpringLerp;
+    public float timeToLerp;
+    public float lerpChangeRate;
 
-    [Header("Glide")]
-    public float GlideGravityMult;
-    public float GlideMovementLerp;
-    public float GlideSleepTime;
-    public float GlideMaxFallSpeed;
-
-    [Space(20)] 
-
-    [Header("Ability menu")]
-    public float MenuTimeSlow;
+    
 
 
     //Unity Callback, called when the inspector updates

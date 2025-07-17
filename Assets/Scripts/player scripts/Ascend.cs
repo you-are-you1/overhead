@@ -10,14 +10,14 @@ public class Ascend : MonoBehaviour
     public static event Action<Ascend> NextLevelEvent;
 
     public InputSystem_Actions controls;
-    InputAction abilityAction;
+    public InputAction abilityAction;
 
     private Rigidbody2D RB;
     private Collider2D playerCollider;
 
     private float ascendCooldown;
 
-    public bool checkForAscend {  get; private set; }
+    public bool checkForAscend {  get; set; }
     public RaycastHit2D centerCheck {  get; private set; }
 
     [HideInInspector] public Bounds bounds;
@@ -65,6 +65,7 @@ public class Ascend : MonoBehaviour
             if (isInLevelTrigger)
             {
                 NextLevelEvent?.Invoke(this);
+                abilityAction.Disable();
             }
             else if (ascendCooldown < 0)
             {

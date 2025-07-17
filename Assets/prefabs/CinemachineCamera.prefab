@@ -102,7 +102,7 @@ MonoBehaviour:
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 0, z: 0}
-  Damping: {x: 1, y: 1, z: 1}
+  Damping: {x: 3, y: 3, z: 3}
   Lookahead:
     Enabled: 1
     Time: 0
@@ -121,8 +121,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BoundingShape2D: {fileID: 0}
-  Damping: 0.2
-  SlowingDistance: 1
+  Damping: 0.8
+  SlowingDistance: 3
   OversizeWindow:
     Enabled: 0
     MaxWindowSize: 0

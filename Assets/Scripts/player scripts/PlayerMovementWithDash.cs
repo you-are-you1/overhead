@@ -10,6 +10,7 @@ using System.Collections;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerMovementWithDash : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class PlayerMovementWithDash : MonoBehaviour
     //just paste in all the parameters, though you will need to manuly change all references in this script
     public PlayerDataWithDash Data;
 
-    
+    public bool isSpringBoosting;
     
     private Ascend Ascend;
 
@@ -49,6 +50,10 @@ public class PlayerMovementWithDash : MonoBehaviour
     public float LastOnWallRightTime { get; private set; }
     public float LastOnWallLeftTime { get; private set; }
 
+    public float SpringBoostTimer;
+
+    public float SideSpringLerpTimer;
+
     //Jump
     private bool _isJumpCut;
     private bool _isJumpFalling;
@@ -63,7 +68,7 @@ public class PlayerMovementWithDash : MonoBehaviour
     private Vector2 _lastDashDir;
     private bool _isDashAttacking;
 
-  
+    public float currentRunLerp { get; private set; }
 
     #endregion
 
@@ -136,8 +141,9 @@ public class PlayerMovementWithDash : MonoBehaviour
     private void Start()
     {
         SetGravityScale(Data.gravityScale);
+        Debug.Log(Data.gravityScale);
         IsFacingRight = true;
-        
+        isSpringBoosting = false;
 
         enableWallJumpAbility = true;
         enableDashAbility = false;
@@ -153,6 +159,13 @@ public class PlayerMovementWithDash : MonoBehaviour
 
         LastPressedJumpTime -= Time.deltaTime;
         LastPressedDashTime -= Time.deltaTime;
+
+        if (isSpringBoosting)
+        {
+            SpringBoostTimer -= Time.deltaTime;
+        }
+
+        SideSpringLerpTimer -= Time.deltaTime;
         #endregion
 
         #region INPUT HANDLER
@@ -185,7 +198,10 @@ public class PlayerMovementWithDash : MonoBehaviour
             {
               
                 if (RB.linearVelocity.y <= 0) Ascend.isAscendBoosting = false;
-
+                if (SpringBoostTimer < 0)
+                {
+                    isSpringBoosting = false;
+                }
                 LastOnGroundTime = Data.coyoteTime; //if so sets the lastGrounded to coyoteTime
             }
 
@@ -197,8 +213,8 @@ public class PlayerMovementWithDash : MonoBehaviour
                 LastOnWallRightTime = Data.coyoteTime;
 
                 if (!Ascend.isAscending) Ascend.isAscendBoosting = false;
-                
-                
+                if (SpringBoostTimer < 0) isSpringBoosting = false;
+
                 IsTouchingWall = true;
             }
                 
@@ -210,6 +226,7 @@ public class PlayerMovementWithDash : MonoBehaviour
                 LastOnWallLeftTime = Data.coyoteTime;
                 
                 if (!Ascend.isAscending) Ascend.isAscendBoosting = false;
+                if (SpringBoostTimer < 0) isSpringBoosting = false;
 
                 IsTouchingWall = true;
             }
@@ -243,7 +260,8 @@ public class PlayerMovementWithDash : MonoBehaviour
         if (!IsDashing)
         {
             //Jump
-            if (CanJump() && LastPressedJumpTime > 0 && !Ascend.isAscendBoosting && !Ascend.isAscending && Ascend.jumpAfterAscendTimer < 0)
+            if (CanJump() && LastPressedJumpTime > 0 && !Ascend.isAscendBoosting && 
+                !Ascend.isAscending && Ascend.jumpAfterAscendTimer < 0 && !isSpringBoosting)
             {
                 IsJumping = true;
                 IsWallJumping = false;
@@ -256,7 +274,8 @@ public class PlayerMovementWithDash : MonoBehaviour
 
             }
             //WALL JUMP
-            else if (CanWallJump() && LastPressedJumpTime > 0 && enableWallJumpAbility == true)
+            else if (CanWallJump() && LastPressedJumpTime > 0 && enableWallJumpAbility == true
+                 && !isSpringBoosting)
             {
                 IsWallJumping = true;
                 IsJumping = false;
@@ -305,8 +324,9 @@ public class PlayerMovementWithDash : MonoBehaviour
         else
             IsSliding = false;
         #endregion
-        
+
         #region GRAVITY
+        
         if (!_isDashAttacking && !Ascend.isAscending)
         {
             //Higher gravity if we've released the jump input or are falling
@@ -325,6 +345,13 @@ public class PlayerMovementWithDash : MonoBehaviour
             {
                 SetGravityScale(Data.gravityScale);
                 RB.linearVelocity = new Vector2(RB.linearVelocity.x, Mathf.Max(RB.linearVelocity.y, -Data.maxFallSpeed)); //grappling downwards wont cause you to go faster than max fall speed
+            }
+            else if (isSpringBoosting)
+            {
+                
+                SetGravityScale(Data.gravityScale * Data.fallGravityMult);
+                //Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
+                RB.linearVelocity = new Vector2(RB.linearVelocity.x, Mathf.Max(RB.linearVelocity.y, -Data.maxFallSpeed));
             }
             else if (_isJumpCut)
             {
@@ -355,6 +382,7 @@ public class PlayerMovementWithDash : MonoBehaviour
             //(returns to normal once initial dashAttack phase over)
             SetGravityScale(0);
         }
+
         #endregion
     }
 
@@ -363,10 +391,20 @@ public class PlayerMovementWithDash : MonoBehaviour
         //Handle Run
         if (!IsDashing && !Ascend.isAscending)
         {
+           
             if (IsWallJumping)
-                Run(Data.wallJumpRunLerp);
+                currentRunLerp = Data.wallJumpRunLerp;
+            else if (isSpringBoosting && SideSpringLerpTimer > 0)
+                currentRunLerp = Data.SideSpringLerp;
+            else if (isSpringBoosting)
+            {
+                currentRunLerp = Mathf.MoveTowards(currentRunLerp, 1, Data.lerpChangeRate * Time.fixedDeltaTime);
+               
+            }
             else
-                Run(1);
+                currentRunLerp = 1;
+
+            Run(currentRunLerp);
         }
         else if (_isDashAttacking)
         {
@@ -442,7 +480,7 @@ public class PlayerMovementWithDash : MonoBehaviour
 
         #region Add Bonus Jump Apex Acceleration
         //Increase are acceleration and maxSpeed when at the apex of their jump, makes the jump feel a bit more bouncy, responsive and natural
-        if ((IsJumping || IsWallJumping || _isJumpFalling) && Mathf.Abs(RB.linearVelocity.y) < Data.jumpHangTimeThreshold)
+        if ((IsJumping || IsWallJumping || _isJumpFalling || Ascend.isAscendBoosting) && Mathf.Abs(RB.linearVelocity.y) < Data.jumpHangTimeThreshold)
         {
             accelRate *= Data.jumpHangAccelerationMult;
             targetSpeed *= Data.jumpHangMaxSpeedMult;
@@ -525,7 +563,7 @@ public class PlayerMovementWithDash : MonoBehaviour
        // if (Mathf.Sign(RB.linearVelocity.x) != Mathf.Sign(force.x))
             force.x -= RB.linearVelocity.x;
 
-        if (RB.linearVelocity.y < 0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
+        //if (RB.linearVelocity.y < 0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
             force.y -= RB.linearVelocity.y;
 
         //Unlike in the run we want to use the Impulse mode.
@@ -596,10 +634,10 @@ public class PlayerMovementWithDash : MonoBehaviour
     {
         
             //We remove the remaining upwards Impulse to prevent upwards sliding
-            if (RB.linearVelocity.y > 0)
-            {
-                RB.AddForce(-RB.linearVelocity.y * Vector2.up, ForceMode2D.Impulse);
-            }
+            //if (RB.linearVelocity.y > 0)
+            //{
+            //    RB.AddForce(-RB.linearVelocity.y * Vector2.up, ForceMode2D.Impulse);
+            //}
 
             //Works the same as the Run but only in the y-axis
             //THis seems to work fine, buit maybe you'll find a better way to implement a slide into this system

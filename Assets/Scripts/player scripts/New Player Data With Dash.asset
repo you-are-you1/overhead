@@ -16,7 +16,7 @@ MonoBehaviour:
   gravityScale: 7.9284167
   fallGravityMult: 1.5
   maxFallSpeed: 30
-  fastFallGravityMult: 2
+  fastFallGravityMult: 1.5
   maxFastFallSpeed: 30
   runMaxSpeed: 11
   runAcceleration: 4
@@ -51,12 +51,6 @@ MonoBehaviour:
   dashEndRunLerp: 0.5
   dashRefillTime: 0.1
   dashInputBufferTime: 0.1
-  grappleSpeed: 30
-  grappleSleepTime: 0.05
-  grappleEndTime: 0.15
-  grappleEndSpeed: 30
-  grappleLerpStrength: 0.5
-  grappleError: 0.5
   ascendRange: 8
   ascendSpeedOutsideWall: 35
   ascendSpeedInWall: 25
@@ -65,13 +59,8 @@ MonoBehaviour:
   ascendEndBoost: 30
   ascendBlockerCooldownTime: 0
   jumpPreventionAfterAscendTime: 0.15
-  superdashChargeTime: 0.5
-  superdashSpeed: 30
-  superdashFreezeTime: 0.3
-  superdashMinTime: 0.2
-  superdashCancelBoost: 0
-  GlideGravityMult: 0.5
-  GlideMovementLerp: 0.5
-  GlideSleepTime: 0.05
-  GlideMaxFallSpeed: 6
-  MenuTimeSlow: 0.05
+  timeToLook: 0.25
+  cameraMoveDuration: 0.5
+  SideSpringLerp: 0.2
+  timeToLerp: 0.1
+  lerpChangeRate: 2.5
