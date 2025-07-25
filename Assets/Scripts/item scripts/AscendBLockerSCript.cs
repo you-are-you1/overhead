@@ -6,8 +6,8 @@ public class AscendBlockerScript : MonoBehaviour
     public static event Action<AscendBlockerScript> OnPlayerTouchAscendBlocker;
 
     public GameObject player;
-    private Ascend playerAscend;
 
+    private Ascend playerAscend;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

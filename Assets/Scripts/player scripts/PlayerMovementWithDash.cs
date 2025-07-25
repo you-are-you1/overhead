@@ -343,12 +343,13 @@ public class PlayerMovementWithDash : MonoBehaviour
             }
             else if (Ascend.isAscendBoosting)
             {
+               
                 SetGravityScale(Data.gravityScale);
                 RB.linearVelocity = new Vector2(RB.linearVelocity.x, Mathf.Max(RB.linearVelocity.y, -Data.maxFallSpeed)); //grappling downwards wont cause you to go faster than max fall speed
             }
             else if (isSpringBoosting)
             {
-                
+               
                 SetGravityScale(Data.gravityScale * Data.fallGravityMult);
                 //Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
                 RB.linearVelocity = new Vector2(RB.linearVelocity.x, Mathf.Max(RB.linearVelocity.y, -Data.maxFallSpeed));

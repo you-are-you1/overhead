@@ -51,11 +51,11 @@ public class LineDrawScript : MonoBehaviour
                 endPoint.y += Data.ascendRange;
             }
 
-            centerLineRenderer.SetPosition(0, transform.position);
+            centerLineRenderer.SetPosition(0, transform.position + (Vector3.up * 0.5f));
             centerLineRenderer.SetPosition(1, endPoint);
-            leftLineRenderer.SetPosition(0, new Vector3(transform.position.x - 0.4f, transform.position.y, transform.position.z));
+            leftLineRenderer.SetPosition(0, new Vector3(transform.position.x - 0.4f, transform.position.y + 0.5f, transform.position.z));
             leftLineRenderer.SetPosition(1, new Vector3(endPoint.x - 0.4f, endPoint.y, endPoint.z));
-            rightLineRenderer.SetPosition(0, new Vector3(transform.position.x + 0.4f, transform.position.y, transform.position.z));
+            rightLineRenderer.SetPosition(0, new Vector3(transform.position.x + 0.4f, transform.position.y + 0.5f, transform.position.z));
             rightLineRenderer.SetPosition(1, new Vector3(endPoint.x + 0.4f, endPoint.y, endPoint.z));
 
 

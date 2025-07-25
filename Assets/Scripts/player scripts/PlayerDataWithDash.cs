@@ -89,6 +89,7 @@ public class PlayerDataWithDash : ScriptableObject
     public float ascendSleepTime;
     public float ascendSleepBetweenTime;
     public float ascendEndBoost;
+    public float ascendEndBoostNoWall;
     public float ascendBlockerCooldownTime;
     public float jumpPreventionAfterAscendTime;
 

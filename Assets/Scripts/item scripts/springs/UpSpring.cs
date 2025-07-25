@@ -30,7 +30,7 @@ public class UpSpring : MonoBehaviour
     {
         if (collision.gameObject == player && !playerAscend.isAscending)
         {
-           
+            playerAscend.isAscendBoosting = false;
             movement.isSpringBoosting = true;
             movement.SpringBoostTimer = springData.SpringBoostCheckDuration;
             

@@ -57,10 +57,11 @@ MonoBehaviour:
   ascendSleepTime: 0.1
   ascendSleepBetweenTime: 0.05
   ascendEndBoost: 30
+  ascendEndBoostNoWall: 20
   ascendBlockerCooldownTime: 0
   jumpPreventionAfterAscendTime: 0.15
   timeToLook: 0.25
-  cameraMoveDuration: 0.5
+  cameraMoveDuration: 0.2
   SideSpringLerp: 0.2
   timeToLerp: 0.1
   lerpChangeRate: 2.5

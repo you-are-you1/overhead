@@ -1,6 +1,6 @@
 using System;
 using Unity.Burst;
-using UnityEditor.Rendering;
+
 using UnityEngine;
 
 public class SpikesScript : MonoBehaviour
@@ -8,13 +8,14 @@ public class SpikesScript : MonoBehaviour
 
     public static event Action<SpikesScript> OnPlayerTouchSpikesEvent;
 
-    public GameObject player;
+    private GameObject player;
     private Rigidbody2D playerRB;
     private Ascend playerAscend;
     private PlatformEffector2D platformEffector;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         playerAscend = player.GetComponent<Ascend>();
         playerRB = player.GetComponent<Rigidbody2D>();
         platformEffector = GetComponent<PlatformEffector2D>();

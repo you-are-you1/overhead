@@ -41,7 +41,7 @@ public class Ascend : MonoBehaviour
         isAscending = false;
         isAscendBoosting = false;
 
-        groundLayerMask = 1 << 6;
+        groundLayerMask = 1 << 6; //layerMask with only ground tiles
 
         bounds = new Bounds();
         overlap = new Collider2D();
@@ -109,34 +109,45 @@ public class Ascend : MonoBehaviour
 
     private IEnumerator StartAscend()
     {
+        float startY = transform.position.y;
+     
+        bool didNotReachWall = true;
         isAscending = true;
         isAscendBoosting = false;
         
         SetGravityScale(0);
 
         gameObject.layer = 8;
+           
 
-        while (!isAscendingInWall())
+        while (!isAscendingInWall() && startY + Data.ascendRange > transform.position.y)
         {
             RB.linearVelocity = Vector2.up * Data.ascendSpeedOutsideWall;
             yield return null;
         }
         
-        Sleep(Data.ascendSleepBetweenTime);   
+        if (isAscendingInWall())
+        {
+            Sleep(Data.ascendSleepBetweenTime);
+            didNotReachWall = false;
+        }
 
         while (isAscendingInWall())
         {
             RB.linearVelocity = Vector2.up * Data.ascendSpeedInWall;
+          
             yield return null;
         }
 
         gameObject.layer = 0;
-        RB.linearVelocity = Vector2.up * Data.ascendEndBoost;
+        RB.linearVelocity = didNotReachWall? Vector2.up * Data.ascendEndBoostNoWall : Vector2.up * Data.ascendEndBoost;
         SetGravityScale(Data.gravityScale);
 
         isAscending = false;
         isAscendBoosting = true;
         jumpAfterAscendTimer = Data.jumpPreventionAfterAscendTime;
+
+       
     }
 
     public bool isAscendingInWall()
