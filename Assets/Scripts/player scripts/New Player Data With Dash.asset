@@ -41,7 +41,7 @@ MonoBehaviour:
   slideSpeed: -10
   slideAccel: 8
   coyoteTime: 0.1
-  jumpInputBufferTime: 0.1
+  jumpInputBufferTime: 0.15
   dashAmount: 1
   dashSpeed: 20
   dashSleepTime: 0.05
@@ -65,3 +65,5 @@ MonoBehaviour:
   SideSpringLerp: 0.2
   timeToLerp: 0.1
   lerpChangeRate: 2.5
+  springMomentumJumpBoost: 28
+  speedBoostThreshold: 20

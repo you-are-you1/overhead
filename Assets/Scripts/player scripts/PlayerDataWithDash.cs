@@ -105,8 +105,10 @@ public class PlayerDataWithDash : ScriptableObject
     public float SideSpringLerp;
     public float timeToLerp;
     public float lerpChangeRate;
+    public float springMomentumJumpBoost;
+    public float speedBoostThreshold;
 
-    
+
 
 
     //Unity Callback, called when the inspector updates

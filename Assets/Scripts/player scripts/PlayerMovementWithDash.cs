@@ -18,7 +18,7 @@ public class PlayerMovementWithDash : MonoBehaviour
     //just paste in all the parameters, though you will need to manuly change all references in this script
     public PlayerDataWithDash Data;
 
-    public bool isSpringBoosting;
+    [HideInInspector] public bool isSpringBoosting;
     
     private Ascend Ascend;
 
@@ -50,9 +50,11 @@ public class PlayerMovementWithDash : MonoBehaviour
     public float LastOnWallRightTime { get; private set; }
     public float LastOnWallLeftTime { get; private set; }
 
-    public float SpringBoostTimer;
+    [HideInInspector] public float SpringBoostTimer;
 
-    public float SideSpringLerpTimer;
+    [HideInInspector] public float SideSpringLerpTimer;
+
+    private bool applyJumpBoost;
 
     //Jump
     private bool _isJumpCut;
@@ -147,6 +149,8 @@ public class PlayerMovementWithDash : MonoBehaviour
 
         enableWallJumpAbility = true;
         enableDashAbility = false;
+
+        applyJumpBoost = false;
     }
 
     private void Update()
@@ -267,7 +271,14 @@ public class PlayerMovementWithDash : MonoBehaviour
                 IsWallJumping = false;
                 _isJumpCut = false;
                 _isJumpFalling = false;
+
+                if (Mathf.Abs(RB.linearVelocity.x) > Data.speedBoostThreshold)
+                {
+                    applyJumpBoost = true;
+                }
+               
                 Jump();
+                
                 
 
 
@@ -412,6 +423,21 @@ public class PlayerMovementWithDash : MonoBehaviour
             Run(Data.dashEndRunLerp);
         }
 
+        if (applyJumpBoost)
+        {
+            if (LastOnGroundTime < Data.coyoteTime) applyJumpBoost = false;
+            if (RB.linearVelocity.x > 0)
+            {
+                RB.linearVelocity = new Vector2(Data.springMomentumJumpBoost, RB.linearVelocity.y);
+            }
+            else
+            {
+                RB.linearVelocity = new Vector2(-Data.springMomentumJumpBoost, RB.linearVelocity.y);
+
+            }
+            
+        }
+
         
         //Handle Slide
         if (IsSliding)
@@ -495,6 +521,7 @@ public class PlayerMovementWithDash : MonoBehaviour
             //Prevent any deceleration from happening, or in other words conserve are current momentum
             //You could experiment with allowing for the player to slightly increae their speed whilst in this "state"
             accelRate = 0;
+          
         }
         #endregion
 
