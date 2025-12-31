@@ -50,6 +50,7 @@ public class AnimationScript : MonoBehaviour
         pm.moveAction.Disable();
         pm.jumpAction.Disable();
         ascend.checkForAscend = false;
+        PauseScript.canPause = false;
         playerAnimator.SetTrigger("Death"); //player death anim
         AudioManager.instance.Play("Death");
         //LevelLoader.isDeath = true;
