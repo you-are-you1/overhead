@@ -21,6 +21,8 @@ public class LevelLoader : MonoBehaviour
         SpikesScript.OnPlayerTouchSpikesEvent += reloadLevelSpikes;
         Ascend.NextLevelEvent += loadNextLevel;
         DeathPlaneScript.OnPlayerTouchDeathPlaneEvent += reloadLevelDeathPlane;
+        PauseScript.RetryLevelEvent += reloadLevelRetry;
+        PauseScript.ReturnToMenuEvent += returnToStartPause;
     }
 
     private void OnDisable()
@@ -28,6 +30,8 @@ public class LevelLoader : MonoBehaviour
         SpikesScript.OnPlayerTouchSpikesEvent -= reloadLevelSpikes;
         Ascend.NextLevelEvent -= loadNextLevel;
         DeathPlaneScript.OnPlayerTouchDeathPlaneEvent -= reloadLevelDeathPlane;
+        PauseScript.RetryLevelEvent -= reloadLevelRetry;
+        PauseScript.ReturnToMenuEvent -= returnToStartPause;
     }
 
     private void Awake()
@@ -52,14 +56,15 @@ public class LevelLoader : MonoBehaviour
 
     IEnumerator loadLevel(int level)
     {
-        yield return new WaitForSeconds(0.01f); //wait for isDeath to get set
+        yield return new WaitForSecondsRealtime(0.01f); //wait for isDeath to get set
 
-        Debug.Log(isDeath);
+   
         if (isDeath) //death
         {
             
 
-            yield return new WaitForSeconds(waitTimeForDeathTransition);
+            
+            yield return new WaitForSecondsRealtime(waitTimeForDeathTransition);
 
             deathTransition.SetActive(true);
             levelTransition.SetActive(false);
@@ -67,25 +72,53 @@ public class LevelLoader : MonoBehaviour
             
             deathTransitionAnim.SetTrigger("DeathTransition");
 
-            yield return new WaitForSeconds(deathTransitionTime);
+            yield return new WaitForSecondsRealtime(deathTransitionTime);
 
         }
         else
         {
-            yield return new WaitForSeconds(waitTimeForLevelTransition);
+            yield return new WaitForSecondsRealtime(waitTimeForLevelTransition);
 
+            //Debug.Log("First wait");
             deathTransition.SetActive(false);
             levelTransition.SetActive(true);
 
             levelTransitionAnim.SetTrigger("LevelTransition");
+            // Debug.Log("animation triger");
 
-            yield return new WaitForSeconds(levelTransitionTime);
+            yield return new WaitForSecondsRealtime(levelTransitionTime);
+            //Debug.Log("second wait");
         }
 
         SceneManager.LoadScene(level);
-        
+        //Debug.Log("loaoded scene");
     }
 
     private void reloadLevelSpikes(SpikesScript script) { reloadLevel(); }
     private void reloadLevelDeathPlane(DeathPlaneScript script) { reloadLevel(); }
+
+    private void reloadLevelRetry(PauseScript script) { reloadLevel(); }
+
+    private void returnToStartPause(PauseScript script)
+    {
+        StartCoroutine(goToStart());
+        //Debug.Log("return to menu");
+    }
+
+    private IEnumerator goToStart()
+    {
+        deathTransition.SetActive(false);
+        levelTransition.SetActive(true);
+
+        levelTransitionAnim.SetTrigger("LevelTransition");
+        // Debug.Log("animation triger");
+
+        yield return new WaitForSecondsRealtime(levelTransitionTime);
+        //Debug.Log("second wait");
+
+        GameObject pauseMenu = GameObject.FindGameObjectWithTag("PauseCanvas");
+        pauseMenu.GetComponent<PauseScript>().UnPauseGame(false);
+
+        SceneManager.LoadScene(0);
+    }
 }

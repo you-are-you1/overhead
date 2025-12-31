@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: isSolid
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2847662330390332839, guid: f84c7c9a25bd60b4fb124af7104df98a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7a9e31646d9b57348a614ce337f21184, type: 2}
     - target: {fileID: 3409767107694120987, guid: f84c7c9a25bd60b4fb124af7104df98a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -55,10 +59,18 @@ PrefabInstance:
     - target: {fileID: 5270311128571526004, guid: f84c7c9a25bd60b4fb124af7104df98a, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 2003801296462392846, guid: 62e0ea1f49b61dd4ca638f222783d138, type: 3}
+      objectReference: {fileID: 4423971861749587508, guid: 257e46ed2ed6dd64eafb4f5f6edaadb5, type: 3}
     - target: {fileID: 8190791925213430261, guid: f84c7c9a25bd60b4fb124af7104df98a, type: 3}
       propertyPath: m_Name
-      value: uSwitchSpringSolid Variant
+      value: uSwitchSpringSolid
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336179009947898101, guid: f84c7c9a25bd60b4fb124af7104df98a, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336179009947898101, guid: f84c7c9a25bd60b4fb124af7104df98a, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

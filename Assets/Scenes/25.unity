@@ -768,6 +768,91 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1780999832
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 10990704576546681, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_Size.x
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 10990704576546681, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_Size.y
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 10990704576546681, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_Offset.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 10990704576546681, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_Offset.y
+      value: -5.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 10990704576546681, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 6.0625
+      objectReference: {fileID: 0}
+    - target: {fileID: 10990704576546681, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2246186289918585324, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2378048367399192656, guid: 17b1cf461ccef5f45b3999b632408671, type: 3}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 25.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876370608481194410, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7407014776416794963, guid: be049ce52c89438478a9134bb2185f53, type: 3}
+      propertyPath: m_Name
+      value: tutorial
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: be049ce52c89438478a9134bb2185f53, type: 3}
 --- !u!1001 &1898762781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8845,3 +8930,4 @@ SceneRoots:
   - {fileID: 315631235}
   - {fileID: 990162375}
   - {fileID: 1735810501}
+  - {fileID: 1780999832}

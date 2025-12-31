@@ -3,11 +3,12 @@ using UnityEngine;
 public class SwitchSpringScript : MonoBehaviour
 {
     [SerializeField] private bool isSolid;
-    [SerializeField] private Sprite solidSprite;
-    [SerializeField] private Sprite dottedSprite;
+    
 
     private SpriteRenderer SpriteRenderer;
     private BoxCollider2D springCollider;
+
+    private Animator animator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,7 +16,7 @@ public class SwitchSpringScript : MonoBehaviour
         springCollider = GetComponent<BoxCollider2D>();
         springCollider.enabled = isSolid;
 
-      
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -29,14 +30,16 @@ public class SwitchSpringScript : MonoBehaviour
         isSolid = !isSolid;
         springCollider.enabled = isSolid;
 
-        if (isSolid)
-        {
-            SpriteRenderer.sprite = solidSprite;
-        }
-        else
-        {
-            SpriteRenderer.sprite = dottedSprite;
-        }
+        animator.SetTrigger("Switch");
+
+        //if (isSolid)
+        //{
+        //    SpriteRenderer.sprite = solidSprite;
+        //}
+        //else
+        //{
+        //    SpriteRenderer.sprite = dottedSprite;
+        //}
 
     }
 

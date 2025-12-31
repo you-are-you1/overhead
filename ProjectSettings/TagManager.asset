@@ -6,6 +6,12 @@ TagManager:
   tags:
   - CinemachineCamera
   - Switch
+  - Respawn Effect
+  - Level Trigger
+  - SpeedrunTimer
+  - Event System
+  - PauseMenu
+  - PauseCanvas
   layers:
   - Default
   - TransparentFX
@@ -42,6 +48,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: tutorial
+    uniqueID: 2917993001
     locked: 0
   m_RenderingLayers:
   - Default

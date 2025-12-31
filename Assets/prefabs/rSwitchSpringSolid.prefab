@@ -55,10 +55,22 @@ PrefabInstance:
     - target: {fileID: 5253619054322889257, guid: a1f1d54679daed441b3709443db69899, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1871925732, guid: 62e0ea1f49b61dd4ca638f222783d138, type: 3}
+      objectReference: {fileID: -7587172095641370459, guid: e2c734090abcf26438b201010caeaa66, type: 3}
+    - target: {fileID: 6933647218771818531, guid: a1f1d54679daed441b3709443db69899, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1f8f6a2fbda9d3c429715299d6f2e331, type: 2}
     - target: {fileID: 7860554720254559433, guid: a1f1d54679daed441b3709443db69899, type: 3}
       propertyPath: m_Name
       value: rSwitchSpringSolid
+      objectReference: {fileID: 0}
+    - target: {fileID: 9072338114739026094, guid: a1f1d54679daed441b3709443db69899, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 9072338114739026094, guid: a1f1d54679daed441b3709443db69899, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

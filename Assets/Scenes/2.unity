@@ -558,19 +558,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1071618964765500797, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
       propertyPath: orthographic size
-      value: 11
+      value: 11.25
       objectReference: {fileID: 0}
     - target: {fileID: 1071618964765500797, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
       propertyPath: m_NormalizedViewPortRect.x
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1071618964765500797, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
       propertyPath: m_NormalizedViewPortRect.y
-      value: -0.37500003
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071618964765500797, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
+      propertyPath: m_NormalizedViewPortRect.width
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1071618964765500797, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
       propertyPath: m_NormalizedViewPortRect.height
-      value: 0.75000006
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1596831103198027867, guid: 2401fe89dc3f69e4e909fe0081ef8e90, type: 3}
       propertyPath: m_Name

@@ -51,7 +51,11 @@ PrefabInstance:
     - target: {fileID: 1663534125564274169, guid: 314b6fbdf2803a340972a217c6a5a4bd, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 2995540113460030375, guid: 62e0ea1f49b61dd4ca638f222783d138, type: 3}
+      objectReference: {fileID: 3688628894609130886, guid: 1518e91a4c09b6440be44c29e842b748, type: 3}
+    - target: {fileID: 2600187672701626073, guid: 314b6fbdf2803a340972a217c6a5a4bd, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f2580eaab39eefc45baa7a9943864166, type: 2}
     - target: {fileID: 2724165416043896725, guid: 314b6fbdf2803a340972a217c6a5a4bd, type: 3}
       propertyPath: m_Name
       value: lSwitchSpringSolid
@@ -59,6 +63,14 @@ PrefabInstance:
     - target: {fileID: 6378570061441376776, guid: 314b6fbdf2803a340972a217c6a5a4bd, type: 3}
       propertyPath: isSolid
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302781077145086451, guid: 314b6fbdf2803a340972a217c6a5a4bd, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302781077145086451, guid: 314b6fbdf2803a340972a217c6a5a4bd, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

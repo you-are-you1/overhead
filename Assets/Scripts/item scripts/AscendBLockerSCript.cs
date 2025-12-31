@@ -8,12 +8,16 @@ public class AscendBlockerScript : MonoBehaviour
     public GameObject player;
 
     private Ascend playerAscend;
+    private LineDrawScript lds;
+
+    public GameObject ascendBlockEffect;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerAscend = player.GetComponent<Ascend>();
+        lds = player.GetComponent<LineDrawScript>();
     }
 
     // Update is called once per frame
@@ -38,11 +42,12 @@ public class AscendBlockerScript : MonoBehaviour
         
         if (collision.gameObject == player)
         {
-            Debug.Log("collision deteceet");
+           
             if (playerAscend.isAscending)
             {
                 OnPlayerTouchAscendBlocker?.Invoke(this);
-                Debug.Log("stop ascend");
+                lds.disableTrails();
+                Instantiate(ascendBlockEffect, player.transform.position + new Vector3(0f, 0.5f, 0f), Quaternion.identity);
             }
         }
     }

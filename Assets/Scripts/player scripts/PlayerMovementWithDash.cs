@@ -8,6 +8,7 @@
 
 using System.Collections;
 using System.Xml.Serialization;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -24,6 +25,9 @@ public class PlayerMovementWithDash : MonoBehaviour
 
     bool enableWallJumpAbility;
     bool enableDashAbility;
+
+    [SerializeField] private float waitTimeForControls;
+    private bool canMove;
 
     private GameObject canvas;
     #region COMPONENTS
@@ -101,9 +105,18 @@ public class PlayerMovementWithDash : MonoBehaviour
 
     public InputSystem_Actions controls;
 
-    InputAction moveAction;
-    InputAction jumpAction;
-    InputAction abilityAction;
+    public InputAction moveAction;
+    public InputAction jumpAction;
+    public InputAction abilityAction;
+
+    private GameObject cameraFollow;
+
+    [Header("Particles")]
+    public GameObject jumpPS;
+    public GameObject landPS;
+
+    private ParticleSystem runPS;
+    private ParticleSystem slidePS;
 
     private void Awake()
     {
@@ -117,14 +130,23 @@ public class PlayerMovementWithDash : MonoBehaviour
         
     }
 
-    private void OnEnable()
+    private IEnumerator waitForControls()
     {
+        yield return new WaitForSeconds(waitTimeForControls);
+
         moveAction = controls.Player.Move;
         moveAction.Enable();
         jumpAction = controls.Player.Jump;
         jumpAction.Enable();
         abilityAction = controls.Player.Ability;
         abilityAction.Enable();
+
+        canMove = true;
+    }
+
+    private void OnEnable()
+    {
+        
 
         DeathPlaneScript.OnPlayerTouchDeathPlaneEvent += disableControls;
     }
@@ -134,16 +156,18 @@ public class PlayerMovementWithDash : MonoBehaviour
     
         controls.Player.Disable();
         controls.Disable();
-        moveAction.Disable();
-        jumpAction.Disable();
-        abilityAction.Disable();
+        //moveAction.Disable();
+        //jumpAction.Disable();
+        //abilityAction.Disable();
         
         DeathPlaneScript.OnPlayerTouchDeathPlaneEvent -= disableControls;
     }
     private void Start()
     {
+        canMove = false;
+
         SetGravityScale(Data.gravityScale);
-        Debug.Log(Data.gravityScale);
+      
         IsFacingRight = true;
         isSpringBoosting = false;
 
@@ -151,6 +175,15 @@ public class PlayerMovementWithDash : MonoBehaviour
         enableDashAbility = false;
 
         applyJumpBoost = false;
+
+        LastOnGroundTime = Data.coyoteTime;
+
+        StartCoroutine(waitForControls());
+
+        cameraFollow = transform.Find("Camera Follow Target").gameObject;
+
+        runPS = transform.Find("runPS").GetComponent<ParticleSystem>();
+        slidePS = transform.Find("slidePS").GetComponent<ParticleSystem>(); 
     }
 
     private void Update()
@@ -173,24 +206,27 @@ public class PlayerMovementWithDash : MonoBehaviour
         #endregion
 
         #region INPUT HANDLER
-        _moveInput = moveAction.ReadValue<Vector2>();
-
-        if (_moveInput.x != 0)
-            CheckDirectionToFace(_moveInput.x > 0);
-
-        if (jumpAction.WasPressedThisFrame())
+        if (canMove)
         {
-            OnJumpInput();
-        }
+            _moveInput = moveAction.ReadValue<Vector2>();
 
-        if (jumpAction.WasReleasedThisFrame())
-        {
-            OnJumpUpInput();
-        }
+            if (_moveInput.x != 0 && !PauseScript.ignoreInput)
+                CheckDirectionToFace(_moveInput.x > 0);
 
-        if (abilityAction.WasPressedThisFrame())
-        {
-            OnDashInput();
+            if (jumpAction.WasPressedThisFrame() && !PauseScript.ignoreInput)
+            {
+                OnJumpInput();
+            }
+
+            if (jumpAction.WasReleasedThisFrame() && !PauseScript.ignoreInput)
+            {
+                OnJumpUpInput();
+            }
+
+            if (abilityAction.WasPressedThisFrame() && !PauseScript.ignoreInput)
+            {
+                OnDashInput();
+            }
         }
         #endregion
 
@@ -200,6 +236,10 @@ public class PlayerMovementWithDash : MonoBehaviour
             //Ground Check
             if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer)) //checks if set box overlaps with ground
             {
+                if (LastOnGroundTime < 0 && RB.linearVelocityY <= 0.1f)
+                {
+                    Instantiate(landPS, transform.position, Quaternion.identity);
+                }
               
                 if (RB.linearVelocity.y <= 0) Ascend.isAscendBoosting = false;
                 if (SpringBoostTimer < 0)
@@ -441,7 +481,15 @@ public class PlayerMovementWithDash : MonoBehaviour
         
         //Handle Slide
         if (IsSliding)
+        {
             Slide();
+            if (!slidePS.isPlaying) slidePS.Play();
+        }
+        else if (slidePS.isPlaying)
+        {
+            slidePS.Stop();
+        }
+            
     }
 
     #region INPUT CALLBACKS
@@ -481,7 +529,7 @@ public class PlayerMovementWithDash : MonoBehaviour
     {
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(duration); //Must be Realtime since timeScale with be 0 
-        Time.timeScale = 1;
+        if (!PauseScript.isPaused) Time.timeScale = 1;
     }
     #endregion
 
@@ -497,12 +545,27 @@ public class PlayerMovementWithDash : MonoBehaviour
         #region Calculate AccelRate
         float accelRate;
 
+
+        if (_moveInput.x == 0 && runPS.isPlaying)
+        {
+            runPS.Stop();
+        }
         //Gets an acceleration value based on if we are accelerating (includes turning) 
         //or trying to decelerate (stop). As well as applying a multiplier if we're air borne.
         if (LastOnGroundTime > 0)
+        {
             accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount : Data.runDeccelAmount;
+            if (!runPS.isPlaying) runPS.Play();
+        }
+            
         else
+        {
             accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.runAccelAmount * Data.accelInAir : Data.runDeccelAmount * Data.deccelInAir;
+            if (runPS.isPlaying) runPS.Stop();
+        }
+
+        
+            
         #endregion
 
         #region Add Bonus Jump Apex Acceleration
@@ -544,12 +607,23 @@ public class PlayerMovementWithDash : MonoBehaviour
     private void Turn()
     {
         //stores scale and flips the player along the x axis, 
-        Vector3 scale = transform.localScale;
+        //Vector3 scale = transform.localScale;
         
-        scale.x *= -1;
+        //scale.x *= -1;
         
-        transform.localScale = scale;
-       
+        //transform.localScale = scale;
+
+        if (IsFacingRight)
+        {
+            transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            cameraFollow.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+        }
+        else
+        {
+            transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            cameraFollow.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        }
+
         IsFacingRight = !IsFacingRight;
     }
     #endregion
@@ -572,7 +646,9 @@ public class PlayerMovementWithDash : MonoBehaviour
         
 
         RB.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        
+
+        Instantiate(jumpPS, transform.position, Quaternion.identity);
+
         #endregion
     }
 
@@ -588,7 +664,7 @@ public class PlayerMovementWithDash : MonoBehaviour
         Vector2 force = new Vector2(Data.wallJumpForce.x, Data.wallJumpForce.y);
         force.x *= dir; //apply force in opposite direction of wall
 
-       // if (Mathf.Sign(RB.linearVelocity.x) != Mathf.Sign(force.x))
+       //if (Mathf.Sign(RB.linearVelocity.x) != Mathf.Sign(force.x))
             force.x -= RB.linearVelocity.x;
 
         //if (RB.linearVelocity.y < 0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
@@ -597,8 +673,15 @@ public class PlayerMovementWithDash : MonoBehaviour
         //Unlike in the run we want to use the Impulse mode.
         //The default mode will apply are force instantly ignoring masss
         RB.AddForce(force, ForceMode2D.Impulse);
-        
-        
+
+        if (dir > 0)
+        {
+            Instantiate(jumpPS, transform.position, Quaternion.Euler(0f, 0f, 270f));
+        }
+        else
+        {
+            Instantiate(jumpPS, transform.position, Quaternion.Euler(0f, 0f, 90f));
+        }
         #endregion
     }
     #endregion

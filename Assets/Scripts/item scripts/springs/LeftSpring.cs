@@ -8,8 +8,13 @@ public class LeftSpring : MonoBehaviour
     private Ascend playerAscend;
     private Vector2 springForce;
 
+    private Animator animator;
+    private ParticleSystem ps;
+
     public SpringData springData;
     public PlayerDataWithDash playerData;
+
+    private AudioSource audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,6 +23,11 @@ public class LeftSpring : MonoBehaviour
         movement = player.GetComponent<PlayerMovementWithDash>();
         playerAscend = player.GetComponent<Ascend>();
         springForce = springData.leftSpringForce;
+
+        animator = GetComponent<Animator>();
+        ps = GetComponent<ParticleSystem>();
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -42,6 +52,12 @@ public class LeftSpring : MonoBehaviour
             rb.gravityScale = playerData.gravityScale * playerData.fallGravityMult;
             rb.linearVelocity = new Vector2(springForce.x, springForce.y);
 
+            animator.SetTrigger("Bounce");
+
+            ps.Play();
+
+            audioSource.pitch = Random.Range(0.8f, 1.2f);
+            audioSource.PlayOneShot(audioSource.clip);
         }
 
     }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,7 +12,8 @@ public class DottedTilemapScript : MonoBehaviour
 
     private TileBase[] dottedTiles;
     private Tilemap solidTilemap;
-    
+
+    private Tilemap dottedTilemap;
 
     private BoundsInt combinedBounds;
 
@@ -23,6 +26,14 @@ public class DottedTilemapScript : MonoBehaviour
     private bool isPlayerInDottedTiles;
 
     DottedSpikesScript ds;
+
+    private List<Vector3Int> upEdges;
+    private List<Vector3Int> downEdges;
+    private List<Vector3Int> leftEdges;
+    private List<Vector3Int> rightEdges;
+
+    public GameObject TilemapSwitchPS;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,13 +43,20 @@ public class DottedTilemapScript : MonoBehaviour
         switchesCollected = 0;
         switchesNeeded = GameObject.FindGameObjectsWithTag("Switch").Length;
 
-        Tilemap dottedTilemap = GetComponent<Tilemap>();
+        dottedTilemap = GetComponent<Tilemap>();
         
 
         solidTilemap = GameObject.Find("Solid Tilemap").GetComponent<Tilemap>();
        
         combinedBounds = GetCombinedBounds(dottedTilemap, solidTilemap);
         dottedTiles = dottedTilemap.GetTilesBlock(combinedBounds);
+
+        upEdges = new List<Vector3Int>();
+        downEdges = new List<Vector3Int>();
+        leftEdges = new List<Vector3Int>();
+        rightEdges = new List<Vector3Int>();
+
+        
 
         for (int i = 0; i < dottedTiles.Length; i++)
         {
@@ -48,9 +66,29 @@ public class DottedTilemapScript : MonoBehaviour
             }
         }
 
+        for (int x = combinedBounds.x; x < combinedBounds.x + combinedBounds.size.x; x++)
+        {
+            for (int y = combinedBounds.y; y < combinedBounds.y + combinedBounds.size.y; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, 0);
+                if (dottedTilemap.GetTile(pos) == dottedRuleTile)
+                {
+                    if (dottedTilemap.GetTile(pos + Vector3Int.up) == null) upEdges.Add(pos);
+
+                    if (dottedTilemap.GetTile(pos + Vector3Int.down) == null) downEdges.Add(pos);   
+
+                    if (dottedTilemap.GetTile(pos + Vector3Int.left) == null) leftEdges.Add(pos);
+
+                    if (dottedTilemap.GetTile(pos + Vector3Int.right) == null) rightEdges.Add(pos);
+                }
+            }
+        }
+
+        
+
         ds = GameObject.Find("Dotted Spikes").GetComponent<DottedSpikesScript>();
 
-   
+        
     }
 
     // Update is called once per frame
@@ -85,6 +123,10 @@ public class DottedTilemapScript : MonoBehaviour
         solidTilemap.SetTilesBlock(combinedBounds, dottedTiles);
 
         OnSwitchTilemapEvent?.Invoke(this);
+
+        AudioManager.instance.Play("TilemapSwitch");
+
+        spawnParticles();
     }
 
     public static BoundsInt GetCombinedBounds(Tilemap a, Tilemap b)
@@ -101,6 +143,30 @@ public class DottedTilemapScript : MonoBehaviour
         Vector3Int size = max - min;
 
         return new BoundsInt(min, size);
+    }
+
+    private void spawnParticles()
+    {
+        Vector3Int offset = new Vector3Int(1, 1, 0);
+        foreach (Vector3Int pos in upEdges)
+        {
+            Instantiate(TilemapSwitchPS, pos + offset, Quaternion.identity);
+        }
+
+        foreach (Vector3Int pos in downEdges)
+        {
+            Instantiate(TilemapSwitchPS, pos + offset, Quaternion.Euler(0f, 0f, 180f));
+        }
+
+        foreach (Vector3Int pos in leftEdges)
+        {
+            Instantiate(TilemapSwitchPS, pos + offset, Quaternion.Euler(0f, 0f, 90f));
+        }
+
+        foreach (Vector3Int pos in rightEdges)
+        {
+            Instantiate(TilemapSwitchPS, pos + offset, Quaternion.Euler(0f, 0f, 270f));
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

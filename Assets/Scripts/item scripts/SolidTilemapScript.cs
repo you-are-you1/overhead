@@ -10,6 +10,8 @@ public class SolidTilemapScript : MonoBehaviour
 
     public TileBase solidRuleTile;
     public TileBase dottedRuleTile;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -43,7 +45,7 @@ public class SolidTilemapScript : MonoBehaviour
     private void SwitchToDotted(DottedTilemapScript d)
     {
         dottedTilemap.SetTilesBlock(combinedBounds, solidTiles);
-        Debug.Log("set tiels");
+    
     }
 
     private void OnEnable()

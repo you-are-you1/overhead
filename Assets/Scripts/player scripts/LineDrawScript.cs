@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class LineDrawScript : MonoBehaviour
@@ -13,7 +14,13 @@ public class LineDrawScript : MonoBehaviour
     private LineRenderer centerLineRenderer;
     private LineRenderer rightLineRenderer;
 
-    Vector3 endPoint;
+    private TrailRenderer leftTrail;
+    private TrailRenderer centerTrail;
+    private TrailRenderer rightTrail;
+
+    Vector3 centerPoint;
+    Vector3 leftPoint;
+    Vector3 rightPoint;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -26,6 +33,10 @@ public class LineDrawScript : MonoBehaviour
         centerLineRenderer = centerLine.GetComponent<LineRenderer>();
         rightLineRenderer = rightLine.GetComponent<LineRenderer>();
 
+        leftTrail = leftLine.GetComponent<TrailRenderer>();
+        centerTrail = centerLine.GetComponent<TrailRenderer>();
+        rightTrail = rightLine.GetComponent<TrailRenderer>();
+
         
     }
 
@@ -34,37 +45,73 @@ public class LineDrawScript : MonoBehaviour
     {
         if (AscendScript.checkForAscend)
         {
-            if (!centerLine.activeSelf)
+            if (!centerLineRenderer.enabled)
             {
-                leftLine.SetActive(true);
-                centerLine.SetActive(true);
-                rightLine.SetActive(true);
+                leftLineRenderer.enabled = true;
+                centerLineRenderer.enabled = true;
+                rightLineRenderer.enabled = true;
             }
             
             if (AscendScript.centerCheck)
             {
-                endPoint = AscendScript.centerCheck.point;
+                centerPoint = AscendScript.centerCheck.point;
             }
             else
             {
-                endPoint = transform.position;
-                endPoint.y += Data.ascendRange;
+                centerPoint = transform.position;
+                centerPoint.y += Data.ascendRange;
             }
 
-            centerLineRenderer.SetPosition(0, transform.position + (Vector3.up * 0.5f));
-            centerLineRenderer.SetPosition(1, endPoint);
-            leftLineRenderer.SetPosition(0, new Vector3(transform.position.x - 0.4f, transform.position.y + 0.5f, transform.position.z));
-            leftLineRenderer.SetPosition(1, new Vector3(endPoint.x - 0.4f, endPoint.y, endPoint.z));
-            rightLineRenderer.SetPosition(0, new Vector3(transform.position.x + 0.4f, transform.position.y + 0.5f, transform.position.z));
-            rightLineRenderer.SetPosition(1, new Vector3(endPoint.x + 0.4f, endPoint.y, endPoint.z));
+            if (AscendScript.leftCheck)
+            {
+                leftPoint = AscendScript.leftCheck.point;
+            }
+            else
+            {
+                leftPoint = transform.position;
+                leftPoint.x -= AscendScript.sideCheckOffset;
+                leftPoint.y += Data.ascendRange;
+            }
+
+            if (AscendScript.rightCheck)
+            {
+                rightPoint = AscendScript.rightCheck.point;
+            }
+            else
+            {
+                rightPoint = transform.position;
+                rightPoint.x += AscendScript.sideCheckOffset;
+                rightPoint.y += Data.ascendRange;
+            }
+
+            centerLineRenderer.SetPosition(0, transform.position + (Vector3.up * 0.6f));
+            centerLineRenderer.SetPosition(1, centerPoint);
+            leftLineRenderer.SetPosition(0, transform.position + new Vector3(-AscendScript.sideCheckOffset, 0.6f, 0f));
+            leftLineRenderer.SetPosition(1, leftPoint);
+            rightLineRenderer.SetPosition(0, transform.position + new Vector3(AscendScript.sideCheckOffset, 0.6f, 0f));
+            rightLineRenderer.SetPosition(1, rightPoint);
 
 
         }
-        else if (centerLine.activeSelf)
+        else if (centerLineRenderer.enabled)
         {
-            centerLine.SetActive(false);
-            rightLine.SetActive(false);
-            leftLine.SetActive(false);
+            centerLineRenderer.enabled = false;
+            rightLineRenderer.enabled = false;
+            leftLineRenderer.enabled = false;
         }
+    }
+
+    public void enableTrails()
+    {
+        centerTrail.emitting = true;
+        leftTrail.emitting = true;
+        rightTrail.emitting = true;
+    }
+
+    public void disableTrails()
+    {
+        centerTrail.emitting = false;
+        leftTrail.emitting = false;
+        rightTrail.emitting = false;
     }
 }

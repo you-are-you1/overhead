@@ -8,17 +8,26 @@ public class Ascend : MonoBehaviour
     public PlayerDataWithDash Data;
 
     public static event Action<Ascend> NextLevelEvent;
+    public static event Action<Ascend> StartGameplayEvent;
+    
 
     public InputSystem_Actions controls;
     public InputAction abilityAction;
 
     private Rigidbody2D RB;
     private Collider2D playerCollider;
+    private Animator animator;
+    private SpriteMask mask;
+
+    private LineDrawScript lds;
 
     private float ascendCooldown;
+    private bool canStart;
 
     public bool checkForAscend {  get; set; }
     public RaycastHit2D centerCheck {  get; private set; }
+    public RaycastHit2D leftCheck { get; private set; }
+    public RaycastHit2D rightCheck { get; private set; }
 
     [HideInInspector] public Bounds bounds;
     private Collider2D overlap;
@@ -33,6 +42,18 @@ public class Ascend : MonoBehaviour
 
     int groundLayerMask;
 
+    public float sideCheckOffset;
+    public float waitTimeForControls;
+
+    public GameObject effect;
+    public float effectFrequency;
+
+    [Header("Particles")]
+    public GameObject ascendPS;
+    public GameObject ascendBoostPS;
+
+    private AudioManager audioManager;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -40,6 +61,16 @@ public class Ascend : MonoBehaviour
         checkForAscend = false;
         isAscending = false;
         isAscendBoosting = false;
+
+        canStart = false;
+
+        animator = GetComponent<Animator>();
+
+        mask = GetComponent<SpriteMask>();
+
+        lds = GetComponent<LineDrawScript>();
+
+        audioManager = AudioManager.instance;
 
         groundLayerMask = 1 << 6; //layerMask with only ground tiles
 
@@ -51,6 +82,8 @@ public class Ascend : MonoBehaviour
         //enableItem();
 
         
+
+        StartCoroutine(waitForControls());
     }
 
     // Update is called once per frame
@@ -60,16 +93,19 @@ public class Ascend : MonoBehaviour
         jumpAfterAscendTimer -= Time.deltaTime;
         
 
-        if (abilityAction.WasPressedThisFrame() && !isAscending)
+        if (abilityAction.WasPressedThisFrame() && !isAscending && canStart && !PauseScript.ignoreInput)
         {
             if (isInLevelTrigger)
             {
                 NextLevelEvent?.Invoke(this);
+                PauseScript.canPause = false;
+                audioManager.Play("LevelEnd");
                 abilityAction.Disable();
             }
             else if (ascendCooldown < 0)
             {
                 checkForAscend = true;
+                audioManager.Play("AscendCheck", 0.5f, 1.5f);
             }
         }
 
@@ -78,7 +114,11 @@ public class Ascend : MonoBehaviour
         {
             centerCheck = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + 0.5f),
                 Vector2.up, Data.ascendRange, groundLayerMask);
-            
+            leftCheck = Physics2D.Raycast(new Vector2(transform.position.x - sideCheckOffset, transform.position.y + 0.5f),
+                Vector2.up, Data.ascendRange, groundLayerMask);
+            rightCheck = Physics2D.Raycast(new Vector2(transform.position.x + sideCheckOffset, transform.position.y + 0.5f),
+                Vector2.up, Data.ascendRange, groundLayerMask);
+
 
             //if (centerCheck)
             //{
@@ -87,10 +127,10 @@ public class Ascend : MonoBehaviour
             //else Debug.DrawLine(new Vector2(transform.position.x, transform.position.y + 0.5f),
             //    new Vector2(transform.position.x, transform.position.y + 0.5f + Data.ascendRange));
 
-            
+
         }
 
-        if (abilityAction.WasReleasedThisFrame() && !isAscending && checkForAscend)
+        if (abilityAction.WasReleasedThisFrame() && !isAscending && checkForAscend && !PauseScript.ignoreInput)
         {
             checkForAscend = false;
 
@@ -114,30 +154,53 @@ public class Ascend : MonoBehaviour
         bool didNotReachWall = true;
         isAscending = true;
         isAscendBoosting = false;
+
+        float timeSum = 0;
         
         SetGravityScale(0);
 
         gameObject.layer = 8;
-           
+
+        lds.enableTrails();
+
+        audioManager.Play("AscendStart", 0.5f, 1.5f);
 
         while (!isAscendingInWall() && startY + Data.ascendRange > transform.position.y)
         {
             RB.linearVelocity = Vector2.up * Data.ascendSpeedOutsideWall;
             yield return null;
         }
-        
+
+        lds.disableTrails();
+
         if (isAscendingInWall())
         {
             Sleep(Data.ascendSleepBetweenTime);
             didNotReachWall = false;
+            animator.SetTrigger("ascend");
+            mask.enabled = true;
+            
+            Instantiate(ascendPS, transform.position, Quaternion.identity);
         }
 
         while (isAscendingInWall())
         {
             RB.linearVelocity = Vector2.up * Data.ascendSpeedInWall;
-          
+
+            timeSum += Time.deltaTime;
+            if (timeSum >= effectFrequency)
+            {
+                Instantiate(effect, transform.position, Quaternion.identity);
+
+                timeSum = 0;
+            }
+
             yield return null;
         }
+
+        animator.SetTrigger("stop ascend");
+        mask.enabled = false;
+        
 
         gameObject.layer = 0;
         RB.linearVelocity = didNotReachWall? Vector2.up * Data.ascendEndBoostNoWall : Vector2.up * Data.ascendEndBoost;
@@ -147,7 +210,21 @@ public class Ascend : MonoBehaviour
         isAscendBoosting = true;
         jumpAfterAscendTimer = Data.jumpPreventionAfterAscendTime;
 
-       
+        audioManager.Play("AscendBoost", 0.5f, 1f);
+
+        Instantiate(ascendBoostPS, transform.position, Quaternion.identity);
+    }
+
+    private IEnumerator waitForControls()
+    {
+        yield return new WaitForSeconds(waitTimeForControls);
+        abilityAction = controls.Player.Ability;
+        abilityAction.Enable();
+
+        StartGameplayEvent?.Invoke(this);
+
+        canStart = true;
+        PauseScript.canPause = true;
     }
 
     public bool isAscendingInWall()
@@ -169,8 +246,7 @@ public class Ascend : MonoBehaviour
     }
     private void OnEnable()
     {
-        abilityAction = controls.Player.Ability;
-        abilityAction.Enable();
+       
         SpikesScript.OnPlayerTouchSpikesEvent += stopAscendSpikes;
         AscendBlockerScript.OnPlayerTouchAscendBlocker += stopAscendBlocker;
         DeathPlaneScript.OnPlayerTouchDeathPlaneEvent += disableControls;
@@ -198,7 +274,7 @@ public class Ascend : MonoBehaviour
     {
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(duration); //Must be Realtime since timeScale with be 0 
-        Time.timeScale = 1;
+        if (!PauseScript.isPaused) Time.timeScale = 1;
 
     }
 
