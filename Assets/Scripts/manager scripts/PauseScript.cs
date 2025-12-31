@@ -51,10 +51,11 @@ public class PauseScript : MonoBehaviour
         canUnpause = true;
 
         pauseMenu = transform.Find("pauseMenu").gameObject;
+        Transform panel = pauseMenu.transform.Find("Panel");
 
-        ContinueButton = pauseMenu.transform.Find("continue button").GetComponent<Button>();
-        RetryButton = pauseMenu.transform.Find("retry button").GetComponent<Button>();
-        ExitButton = pauseMenu.transform.Find("return to title button").GetComponent<Button>();
+        ContinueButton = panel.Find("continue button").GetComponent<Button>();
+        RetryButton = panel.Find("retry button").GetComponent<Button>();
+        ExitButton = panel.Find("return to title button").GetComponent<Button>();
         RetryButtonText = RetryButton.transform.GetChild(0).GetComponent<TMP_Text>();
 
         defaultColor = RetryButtonText.color;

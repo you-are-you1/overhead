@@ -45,10 +45,11 @@ public class StartMenuScript : MonoBehaviour
 
         StartCoroutine(waitForStart(true));
 
-        timerToggleInside = transform.Find("toggle inside").gameObject;
+        Transform panel = transform.Find("UI");
+        timerToggleInside = panel.Find("toggle inside").gameObject;
         timerToggleInside.SetActive(isTimerOn);
 
-        muteToggleInside = transform.Find("mute toggle inside").gameObject;
+        muteToggleInside = panel.Find("mute toggle inside").gameObject;
         muteToggleInside.SetActive(isMute);
 
         StartBackgroundScroll(backgroundScroll);

@@ -34,7 +34,7 @@ public class TimerScript : MonoBehaviour
         timeText.text = "00:00.00";
         isTimerRunning = false;
 
-        timerObject = transform.Find("timer background").gameObject;
+        timerObject = transform.Find("UI").Find("timer background").gameObject;
         
         if (!StartMenuScript.isTimerOn) timerObject.SetActive(false);
         else timerObject.SetActive(true);
